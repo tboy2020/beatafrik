@@ -93,7 +93,7 @@
   input.t:focus,textarea.t:focus,select.t:focus{
     outline:none;border-color:var(--verd2);box-shadow:0 0 0 3px rgba(42,157,143,.15);
   }
-  textarea.t{resize:vertical;min-height:64px;line-height:1.5;}
+  textarea.t{resize:none;min-height:48px;line-height:1.5;overflow:hidden;}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;}
   @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
 
@@ -624,6 +624,17 @@ function esc(s){
   return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 function escLines(s){ return esc(s).replace(/\n/g,"<br/>"); }
+function autosize(ta){
+  if(!ta) return;
+  ta.style.height="auto";
+  var h=ta.scrollHeight;
+  if(h>0){ ta.style.height=(h+2)+"px"; }
+}
+function autosizeIn(root){
+  var scope=root||document;
+  var tas=scope.querySelectorAll("textarea.t");
+  var i; for(i=0;i<tas.length;i++){ autosize(tas[i]); }
+}
 function findModule(id){
   var i; for(i=0;i<DATA.modules.length;i++){ if(DATA.modules[i].id===id) return DATA.modules[i]; }
   return null;
@@ -658,6 +669,7 @@ function bindSetup(){
       el.addEventListener("input",function(){
         DATA.meta[pair[1]]=el.value;
         if(pair[1]==="business"||pair[1]==="tag"){ syncHeader(); }
+        if(el.tagName==="TEXTAREA"){ autosize(el); }
         save();
       });
     })(map[i]);
@@ -683,6 +695,7 @@ function renderModules(){
       head.addEventListener("click",function(){
         m.collapsed=!m.collapsed;
         mod.classList.toggle("collapsed");
+        if(!m.collapsed){ autosizeIn(mod); }
         save();
       });
       mod.appendChild(head);
@@ -710,7 +723,7 @@ function renderModules(){
       md.innerHTML='<span class="cap">Module Overview</span>';
       var mdInput=document.createElement("textarea");
       mdInput.className="t"; mdInput.value=m.description||"";
-      mdInput.addEventListener("input",function(){ m.description=mdInput.value; save(); });
+      mdInput.addEventListener("input",function(){ m.description=mdInput.value; autosize(mdInput); save(); });
       md.appendChild(mdInput);
       body.appendChild(md);
 
@@ -770,6 +783,7 @@ function renderModules(){
       wrap.appendChild(mod);
     })(DATA.modules[mi], mi);
   }
+  autosizeIn(document.getElementById("modules"));
 }
 
 function buildLesson(m, lesson, idx){
@@ -812,7 +826,7 @@ function fieldRow(label, cls, obj, key){
   var ta=document.createElement("textarea");
   ta.className="t";
   ta.value=obj[key]||"";
-  ta.addEventListener("input",function(){ obj[key]=ta.value; save(); });
+  ta.addEventListener("input",function(){ obj[key]=ta.value; autosize(ta); save(); });
   row.appendChild(ta);
   return row;
 }
@@ -825,7 +839,7 @@ function buildAssign(m, a, idx){
   ta.className="t";
   ta.value=a.text||"";
   ta.placeholder="Describe the assignment...";
-  ta.addEventListener("input",function(){ a.text=ta.value; save(); });
+  ta.addEventListener("input",function(){ a.text=ta.value; autosize(ta); save(); });
   row.appendChild(ta);
   var del=document.createElement("button");
   del.className="btn btn-danger btn-sm";
@@ -1014,8 +1028,10 @@ function bindTabs(){
       this.classList.add("active");
       var panels=document.querySelectorAll(".panel");
       for(k=0;k<panels.length;k++){ panels[k].classList.remove("active"); }
-      document.getElementById("panel-"+tab).classList.add("active");
+      var shownPanel=document.getElementById("panel-"+tab);
+      shownPanel.classList.add("active");
       if(tab==="export"){ renderModChecks(); buildPrintDoc(); }
+      autosizeIn(shownPanel);
     });
   }
 }
@@ -1034,6 +1050,7 @@ function fullRender(){
   document.getElementById("f-level").value=DATA.student.level||"";
   renderModules();
   renderModChecks();
+  autosize(document.getElementById("f-welcome"));
 }
 
 /* ---------- Init ---------- */
@@ -1044,6 +1061,11 @@ function init(){
   bindExport();
   bindBackup();
   fullRender();
+
+  window.addEventListener("resize",function(){
+    var p=document.querySelector(".panel.active");
+    if(p){ autosizeIn(p); }
+  });
 
   document.getElementById("btn-add-module").addEventListener("click",function(){
     DATA.modules.push({id:newId("m"),title:"New Module",description:"",collapsed:false,include:true,
