@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tailoring Curriculum Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --navy:#0f2a43;
+    --navy2:#13314f;
+    --gold:#c9a227;
+    --gold-soft:#e7d089;
+    --verd:#1f7a6f;
+    --verd2:#2a9d8f;
+    --paper:#faf7f0;
+    --card:#ffffff;
+    --ink:#26313a;
+    --muted:#6a7580;
+    --line:#e6ded0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter',system-ui,Arial,sans-serif;
+    background:
+      radial-gradient(1200px 500px at 100% -10%, rgba(201,162,39,.10), transparent 60%),
+      radial-gradient(1000px 500px at -10% 110%, rgba(31,122,111,.10), transparent 60%),
+      var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4,.disp{font-family:'Saira Condensed',sans-serif;letter-spacing:.4px;}
+  .scripture{font-family:'Fraunces',Georgia,serif;font-style:italic;}
+
+  /* Header */
+  header.app{
+    background:linear-gradient(135deg,var(--navy),var(--navy2));
+    color:#fff;padding:26px 20px 20px;position:relative;overflow:hidden;
+    border-bottom:4px solid var(--gold);
+  }
+  header.app:after{
+    content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;
+    background:radial-gradient(circle,rgba(201,162,39,.25),transparent 70%);
+  }
+  .brandline{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .crest{
+    width:54px;height:54px;border-radius:12px;flex:0 0 auto;
+    background:linear-gradient(135deg,var(--gold),#a5811a);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Saira Condensed';font-weight:700;font-size:24px;color:var(--navy);
+    box-shadow:0 6px 18px rgba(0,0,0,.25);
+  }
+  header.app h1{margin:0;font-size:30px;font-weight:700;line-height:1;color:#fff;}
+  header.app .tag{margin:2px 0 0;color:var(--gold-soft);font-size:14px;letter-spacing:.5px;}
+  header.app .verse{
+    margin-top:14px;max-width:760px;color:#eaf1f4;font-size:15px;line-height:1.5;
+    border-left:3px solid var(--gold);padding-left:12px;
+  }
+  header.app .verse b{color:var(--gold-soft);font-style:normal;font-family:'Saira Condensed';font-weight:600;}
+
+  /* Tabs */
+  nav.tabs{
+    display:flex;gap:6px;flex-wrap:wrap;padding:12px 16px 0;max-width:1080px;margin:0 auto;
+  }
+  nav.tabs button{
+    font-family:'Saira Condensed';font-weight:600;font-size:16px;letter-spacing:.5px;
+    border:1px solid var(--line);border-bottom:none;background:#f0e9db;color:var(--muted);
+    padding:11px 18px;border-radius:12px 12px 0 0;cursor:pointer;transition:.15s;
+  }
+  nav.tabs button:hover{color:var(--navy);}
+  nav.tabs button.active{background:var(--card);color:var(--navy);border-color:var(--line);box-shadow:0 -2px 0 var(--gold) inset;}
+
+  main{max-width:1080px;margin:0 auto;padding:0 16px 60px;}
+  .panel{display:none;background:var(--card);border:1px solid var(--line);border-radius:0 14px 14px 14px;padding:24px;box-shadow:0 12px 34px rgba(15,42,67,.06);}
+  .panel.active{display:block;}
+
+  .panel h2{margin:0 0 4px;font-size:24px;color:var(--navy);}
+  .panel .sub{color:var(--muted);font-size:14px;margin:0 0 20px;}
+
+  label.fld{display:block;margin:0 0 16px;}
+  label.fld .cap{
+    display:block;font-family:'Saira Condensed';font-weight:600;font-size:13px;
+    letter-spacing:.8px;text-transform:uppercase;color:var(--verd);margin-bottom:6px;
+  }
+  input.t,textarea.t,select.t{
+    width:100%;font-family:'Inter';font-size:15px;color:var(--ink);
+    border:1px solid var(--line);border-radius:10px;padding:11px 13px;background:#fffdf8;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  input.t:focus,textarea.t:focus,select.t:focus{
+    outline:none;border-color:var(--verd2);box-shadow:0 0 0 3px rgba(42,157,143,.15);
+  }
+  textarea.t{resize:vertical;min-height:64px;line-height:1.5;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+
+  .btn{
+    font-family:'Saira Condensed';font-weight:600;font-size:15px;letter-spacing:.5px;
+    border:none;border-radius:10px;padding:11px 18px;cursor:pointer;transition:.15s;
+  }
+  .btn-gold{background:linear-gradient(135deg,var(--gold),#a5811a);color:var(--navy);}
+  .btn-gold:hover{filter:brightness(1.05);}
+  .btn-verd{background:var(--verd);color:#fff;}
+  .btn-verd:hover{background:var(--verd2);}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--muted);}
+  .btn-ghost:hover{border-color:var(--verd2);color:var(--verd);}
+  .btn-danger{background:transparent;border:1px solid #e2b4ac;color:#b4482f;}
+  .btn-danger:hover{background:#fbeae6;}
+  .btn-sm{padding:7px 12px;font-size:13px;}
+
+  /* Module cards */
+  .module{
+    border:1px solid var(--line);border-radius:14px;margin-bottom:18px;overflow:hidden;
+    background:linear-gradient(#fff,#fffdf7);
+  }
+  .module-head{
+    display:flex;align-items:center;gap:12px;padding:14px 16px;
+    background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;cursor:pointer;
+  }
+  .module-head .num{
+    width:34px;height:34px;flex:0 0 auto;border-radius:9px;background:var(--gold);
+    color:var(--navy);font-family:'Saira Condensed';font-weight:700;font-size:18px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .module-head .mtitle{flex:1;font-family:'Saira Condensed';font-weight:600;font-size:19px;letter-spacing:.3px;}
+  .module-head .chev{font-size:14px;color:var(--gold-soft);transition:.2s;}
+  .module.collapsed .module-body{display:none;}
+  .module.collapsed .chev{transform:rotate(-90deg);}
+  .module-body{padding:16px;}
+
+  .lesson{
+    border:1px solid var(--line);border-radius:11px;padding:14px;margin-bottom:12px;background:#fff;
+  }
+  .lesson-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .lesson-top .dot{width:9px;height:9px;border-radius:50%;background:var(--verd2);flex:0 0 auto;}
+  .lesson-top input{flex:1;font-family:'Saira Condensed';font-weight:600;font-size:16px;color:var(--navy);border:none;border-bottom:1px dashed var(--line);border-radius:0;padding:4px 2px;background:transparent;}
+  .lesson-top input:focus{outline:none;border-bottom-color:var(--verd2);}
+  .field-row{margin-bottom:10px;}
+  .field-row .lab{font-family:'Saira Condensed';font-weight:600;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+  .field-row .lab.learn{color:var(--verd);}
+  .field-row .lab.look{color:#b07d12;}
+  .field-row .lab.prac{color:var(--navy);}
+
+  .assign-wrap{margin-top:12px;border-top:1px dashed var(--line);padding-top:12px;}
+  .assign-title{font-family:'Saira Condensed';font-weight:700;font-size:14px;letter-spacing:.6px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+  .assign{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;}
+  .assign .idx{width:24px;height:24px;flex:0 0 auto;border-radius:6px;background:#f3edde;color:var(--navy);font-family:'Saira Condensed';font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+  .assign textarea{min-height:44px;}
+
+  .rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 22px;}
+
+  .hint{background:#f6f1e5;border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--muted);font-size:13.5px;line-height:1.5;margin-bottom:18px;}
+  .hint b{color:var(--verd);}
+
+  /* Export preview */
+  #printDoc{background:#fff;color:#1c2630;}
+  .doc-cover{text-align:center;padding:30px 24px;border:2px solid var(--gold);border-radius:14px;background:linear-gradient(180deg,#fffdf6,#fff);}
+  .doc-cover .cbrand{font-family:'Saira Condensed';font-weight:700;font-size:30px;color:var(--navy);letter-spacing:.5px;}
+  .doc-cover .ctag{color:var(--verd);font-size:14px;margin-top:2px;}
+  .doc-cover .cverse{font-family:'Fraunces';font-style:italic;color:#4a5560;max-width:620px;margin:14px auto 0;font-size:15px;line-height:1.55;}
+  .doc-cover .cverse span{display:block;font-family:'Saira Condensed';font-style:normal;color:var(--gold);font-size:13px;letter-spacing:.6px;margin-top:6px;}
+  .doc-cover .cprep{margin-top:22px;font-family:'Saira Condensed';font-size:15px;color:var(--muted);letter-spacing:.5px;}
+  .doc-cover .cname{font-family:'Saira Condensed';font-weight:700;font-size:26px;color:var(--navy);margin-top:2px;}
+  .doc-cover .cmeta{color:var(--muted);font-size:13px;margin-top:10px;}
+
+  .doc-toc{margin:24px 0;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:#fffdf7;}
+  .doc-toc h3{margin:0 0 8px;color:var(--navy);font-size:18px;}
+  .doc-toc ol{margin:0;padding-left:22px;color:var(--ink);}
+  .doc-toc li{margin:3px 0;font-size:14.5px;}
+
+  .doc-mod{margin:22px 0;page-break-inside:avoid;}
+  .doc-mod-h{display:flex;align-items:center;gap:12px;border-bottom:2px solid var(--gold);padding-bottom:6px;margin-bottom:10px;}
+  .doc-mod-h .n{background:var(--navy);color:#fff;font-family:'Saira Condensed';font-weight:700;width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .doc-mod-h h3{margin:0;color:var(--navy);font-size:20px;}
+  .doc-mod-desc{color:#4a5560;font-size:14px;margin:0 0 12px;}
+  .doc-lesson{margin:0 0 12px;padding-left:14px;border-left:3px solid var(--verd2);}
+  .doc-lesson h4{margin:0 0 4px;color:#1c2630;font-size:15.5px;font-family:'Saira Condensed';font-weight:600;}
+  .doc-lesson .seg{margin:3px 0;font-size:13.5px;line-height:1.5;}
+  .doc-lesson .seg .k{font-family:'Saira Condensed';font-weight:600;font-size:11.5px;letter-spacing:.5px;text-transform:uppercase;}
+  .doc-lesson .seg.learn .k{color:var(--verd);}
+  .doc-lesson .seg.look .k{color:#b07d12;}
+  .doc-lesson .seg.prac .k{color:var(--navy);}
+  .doc-assign{margin-top:10px;padding:10px 12px;background:#faf6ea;border:1px solid var(--line);border-radius:9px;}
+  .doc-assign .ah{font-family:'Saira Condensed';font-weight:700;font-size:12.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+  .doc-assign ul{margin:0;padding-left:20px;}
+  .doc-assign li{font-size:13.5px;margin:2px 0;}
+
+  .doc-foot{text-align:center;margin-top:26px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);}
+  .doc-foot .g{font-family:'Saira Condensed';font-weight:700;color:var(--gold);letter-spacing:1px;font-size:15px;}
+  .doc-foot .a{font-size:12px;letter-spacing:2px;color:var(--verd);margin-top:2px;}
+
+  .modchk{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:9px;margin-bottom:7px;background:#fffdf7;}
+  .modchk input{width:18px;height:18px;accent-color:var(--verd2);}
+  .modchk .mc-t{font-family:'Saira Condensed';font-weight:600;font-size:15px;color:var(--navy);}
+
+  footer.app{text-align:center;padding:24px 16px 40px;color:var(--muted);}
+  footer.app .g{font-family:'Saira Condensed';font-weight:700;color:var(--gold);letter-spacing:1px;}
+  footer.app .a{font-size:12px;letter-spacing:3px;color:var(--verd);margin-top:2px;}
+
+  .saved{position:fixed;right:16px;bottom:16px;background:var(--verd);color:#fff;font-family:'Saira Condensed';font-weight:600;font-size:14px;padding:9px 15px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.2);opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:50;}
+  .saved.show{opacity:1;transform:translateY(0);}
+
+  @media print{
+    header.app,nav.tabs,footer.app,.toolbar,#exportControls,.saved{display:none !important;}
+    body{background:#fff;}
+    main{max-width:none;padding:0;}
+    .panel{display:none !important;box-shadow:none;border:none;padding:0;}
+    #panel-export{display:block !important;}
+    #printDoc{margin:0;}
+    .doc-mod{page-break-inside:avoid;}
+    .doc-cover{page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="brandline">
+    <div class="crest" id="crest">BA</div>
+    <div>
+      <h1 id="hdrBusiness">Beatafrik</h1>
+      <p class="tag" id="hdrTag">Curriculum Studio &middot; teaching the craft, one stitch at a time</p>
+    </div>
+  </div>
+  <p class="verse scripture">
+    &ldquo;Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.&rdquo;
+    &nbsp;<b>&mdash; Proverbs 3:5&ndash;6, KJV</b>
+  </p>
+</header>
+
+<nav class="tabs">
+  <button data-tab="setup" class="active">Setup</button>
+  <button data-tab="curriculum">Curriculum</button>
+  <button data-tab="export">Student &amp; Export</button>
+  <button data-tab="backup">Backup</button>
+</nav>
+
+<main>
+  <!-- SETUP -->
+  <section class="panel active" id="panel-setup">
+    <h2>Studio Setup</h2>
+    <p class="sub">These details appear on every PDF you hand to a student. Fill them in once &mdash; you can change them any time.</p>
+    <div class="grid2">
+      <label class="fld"><span class="cap">Business / Studio Name</span>
+        <input class="t" id="f-business" placeholder="e.g. Grace &amp; Needle Tailoring Academy" /></label>
+      <label class="fld"><span class="cap">Instructor Name</span>
+        <input class="t" id="f-instructor" placeholder="e.g. Sister Adebola" /></label>
+    </div>
+    <label class="fld"><span class="cap">Tagline (shown under the name)</span>
+      <input class="t" id="f-tag" placeholder="e.g. Raising skilled hands for kingdom impact" /></label>
+    <label class="fld"><span class="cap">Welcome Note to the Student</span>
+      <textarea class="t" id="f-welcome" placeholder="A short word of encouragement your student will read at the top of the curriculum..."></textarea></label>
+    <div class="grid2">
+      <label class="fld"><span class="cap">Scripture (KJV)</span>
+        <input class="t" id="f-scripture" placeholder="Scripture text" /></label>
+      <label class="fld"><span class="cap">Scripture Reference</span>
+        <input class="t" id="f-scriptureref" placeholder="e.g. Proverbs 31:24" /></label>
+    </div>
+    <div class="hint">
+      <b>Tip:</b> The two letters on the gold crest are taken automatically from your business name. Everything here saves as you type.
+    </div>
+  </section>
+
+  <!-- CURRICULUM -->
+  <section class="panel" id="panel-curriculum">
+    <h2>Curriculum Builder</h2>
+    <p class="sub">A full beginner-to-intermediate tailoring course is already written in. Edit any field to make it your own, add lessons and assignments, or start fresh.</p>
+    <div class="hint">
+      Each lesson has three parts a student needs: <b>What they'll learn</b> (the tutorial), <b>What to look out for</b> (the daily watch-points &amp; common mistakes), and <b>Practice</b> (follow-up work). Add <b>assignments</b> at the bottom of each module. Tap a module title bar to collapse or open it.
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-gold" id="btn-add-module">+ Add Module</button>
+      <button class="btn btn-ghost" id="btn-collapse-all">Collapse All</button>
+      <button class="btn btn-ghost" id="btn-expand-all">Expand All</button>
+    </div>
+    <div id="modules"></div>
+  </section>
+
+  <!-- EXPORT -->
+  <section class="panel" id="panel-export">
+    <div id="exportControls">
+      <h2>Student &amp; Export</h2>
+      <p class="sub">Enter the student's details, choose which modules to include, then preview and save the PDF to share.</p>
+      <div class="grid2">
+        <label class="fld"><span class="cap">Student Name</span>
+          <input class="t" id="f-student" placeholder="e.g. Blessing Okoro" /></label>
+        <label class="fld"><span class="cap">Level / Cohort (optional)</span>
+          <input class="t" id="f-level" placeholder="e.g. Beginner Class &middot; 2026" /></label>
+      </div>
+      <label class="cap" style="color:var(--verd);display:block;margin-bottom:8px;font-family:'Saira Condensed';font-weight:600;letter-spacing:.8px;text-transform:uppercase;font-size:13px;">Modules to include in this PDF</label>
+      <div id="modchecks"></div>
+      <div class="toolbar" style="margin-top:18px;">
+        <button class="btn btn-gold" id="btn-preview">Refresh Preview</button>
+        <button class="btn btn-verd" id="btn-print">Save / Print PDF</button>
+      </div>
+      <div class="hint">
+        <b>To save as PDF:</b> tap <b>Save / Print PDF</b>, then in the print window choose <b>&ldquo;Save as PDF&rdquo;</b> as the destination. On a phone, choose &ldquo;Save as PDF&rdquo; or &ldquo;Print to PDF&rdquo;.
+      </div>
+    </div>
+    <div id="printDoc"></div>
+  </section>
+
+  <!-- BACKUP -->
+  <section class="panel" id="panel-backup">
+    <h2>Backup &amp; Restore</h2>
+    <p class="sub">Your work saves on this device automatically. Use these to keep a copy or move it to another device.</p>
+    <div class="toolbar">
+      <button class="btn btn-gold" id="btn-export-json">Download Backup File</button>
+      <button class="btn btn-verd" id="btn-import-json">Restore From File</button>
+      <input type="file" id="importfile" accept="application/json" style="display:none" />
+    </div>
+    <div class="hint">
+      The backup is a single small file containing your whole curriculum, studio details and students. Keep it in Google Drive or email it to yourself for safety.
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-danger" id="btn-reset">Reset to Original Curriculum</button>
+    </div>
+    <div class="hint">
+      <b>Reset</b> restores the built-in tailoring curriculum and clears your edits. Download a backup first if you want to keep your version.
+    </div>
+  </section>
+</main>
+
+<footer class="app">
+  <div class="g">Glory to God alone</div>
+  <div class="a">A M H G</div>
+</footer>
+
+<div class="saved" id="savedToast">Saved</div>
+
+<script>
+/* ============================================================
+   Tailoring Curriculum Studio  ·  Cornerstone Studio house style
+   ES5 only: var, function declarations, string concatenation
+   ============================================================ */
+
+var STORAGE_KEY = "tailoring_curriculum_v1";
+var DATA = null;
+var idc = 0;
+
+function newId(p){ idc++; return p + "_" + (new Date().getTime()) + "_" + idc; }
+
+/* ---------- Seed curriculum (from researched beginner->intermediate order) ---------- */
+function seedData(){
+  function L(t,o,n,p){ return { id:newId("l"), title:t, objectives:o, notes:n, practice:p }; }
+  function A(t){ return { id:newId("a"), text:t }; }
+  function M(t,d,lessons,assigns){ return { id:newId("m"), title:t, description:d, collapsed:false, include:true, lessons:lessons, assignments:assigns }; }
+
+  return {
+    meta:{
+      business:"Beatafrik",
+      instructor:"",
+      tag:"Curriculum Studio · teaching the craft, one stitch at a time",
+      welcome:"Welcome, and well done for taking this step. Over the coming weeks you will move from your very first stitch to sewing a full garment with your own hands. Come ready to learn, to practise, and to work with a diligent heart.",
+      scripture:"Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",
+      scriptureref:"Proverbs 3:5-6, KJV"
+    },
+    student:{ name:"", level:"" },
+    modules:[
+      M("Foundations of Tailoring",
+        "Getting to know the workspace, the tools, and the machine before we ever cut fabric.",
+        [
+          L("Welcome & the Tailor's Toolkit",
+            "Identify and handle every basic tool: tape measure, fabric shears, pins & pin cushion, tailor's chalk, seam ripper, hand needles, thimble, ruler, French curve, and iron.",
+            "Fabric shears are for fabric ONLY — using them on paper blunts them. Keep pins away from the machine needle. Know where each tool lives so nothing is lost.",
+            "Lay out your toolkit and name each tool from memory. Practise cutting straight and curved lines on paper with shears.")
+          ,
+          L("Meet the Sewing Machine",
+            "Learn the parts of the machine, how to wind a bobbin, thread the top and bobbin, set stitch length, and adjust thread tension.",
+            "Watch for the thread take-up lever being in the top position before starting. Uneven or looping stitches usually mean the tension or threading is wrong — re-thread before adjusting dials.",
+            "Wind a bobbin and thread the machine unaided three times until it is smooth and confident.")
+          ,
+          L("Machine Safety, Posture & Care",
+            "Sit correctly, feed fabric without pulling, keep fingers clear of the needle, change a needle, and clean and oil the machine.",
+            "Never sew over pins at speed. Keep both hands guiding, never pulling. Change a bent or blunt needle immediately — it causes skipped stitches and snags.",
+            "Sew straight lines, then gentle curves and corners, on scrap fabric until the line is even and controlled.")
+          ,
+          L("Tailoring Terminology",
+            "Understand the language: grainline, selvage, bias, seam allowance, notch, dart, ease, hem, right side / wrong side, and pressing vs ironing.",
+            "Mixing up the right and wrong side of fabric, or ignoring the grainline, spoils a garment. When in doubt, mark the wrong side with chalk before cutting.",
+            "Make a small labelled glossary card with a fabric sample showing grainline, bias and selvage.")
+        ],
+        [ A("Thread and wind the machine unaided and demonstrate it to the instructor."),
+          A("Name at least 12 tools correctly and explain what each is used for."),
+          A("Sew a page of straight lines, curves and square corners on scrap fabric.") ])
+      ,
+      M("Hand & Machine Stitches",
+        "Building a personal sample book of every stitch and seam you will use again and again.",
+        [
+          L("Essential Hand Stitches",
+            "Sew a running stitch, back stitch, basting/tacking stitch, slip (blind) hem stitch, whip stitch and a tailor's tack.",
+            "Keep stitches even in size and tension — too tight puckers the fabric. Tailor's tacks mark both layers at once; snip gently so the threads stay put.",
+            "Complete a labelled hand-stitch sampler with each stitch neatly worked.")
+          ,
+          L("Core Machine Stitches",
+            "Use straight stitch, backstitch/lock stitch to secure ends, zigzag, stay-stitch and topstitch.",
+            "Always lock the start and end of a seam. Stay-stitch curved edges (necklines, armholes) before handling so they don't stretch out of shape.",
+            "Sew samples of each machine stitch and label them in your sample book.")
+          ,
+          L("Types of Seams & Pressing",
+            "Sew a plain seam, French seam, and flat-felled seam; neaten raw edges; and press seams open and to one side.",
+            "Press every seam as you sew — a garment is made at the ironing board as much as the machine. Do not iron a seam before pressing it flat first.",
+            "Add a plain, French and flat-felled seam to your sample book, each pressed properly.")
+        ],
+        [ A("Assemble a labelled sample book containing every hand and machine stitch and all three seams."),
+          A("Explain when you would choose a French seam over a plain seam.") ])
+      ,
+      M("Measurements & the Body",
+        "Learning to read the tape and take accurate measurements — the foundation of good fit.",
+        [
+          L("Reading the Tape Measure",
+            "Read inches and centimetres confidently, including halves, quarters and eighths of an inch.",
+            "Always measure twice. Keep the tape snug but not tight, and level all the way round the body.",
+            "Measure ten household items and record each to the nearest quarter inch and in centimetres.")
+          ,
+          L("Taking Body Measurements",
+            "Take bust/chest, waist, hip, shoulder width, back length, front length, sleeve length, neck, and skirt/trouser length correctly.",
+            "Have the person stand naturally. Tie a string at the true waist as a reference. Note where each measurement starts and stops so it can be repeated.",
+            "Take a full set of measurements for two different people and record them clearly.")
+          ,
+          L("Recording, Size Charts & Ease",
+            "Enter measurements on a client record card, compare to a standard size chart, and add the right amount of ease for movement.",
+            "A garment with zero ease will not allow movement. Note the fabric — stretch fabrics need less ease than woven ones.",
+            "Create a reusable client measurement card and fill it in for one client.")
+        ],
+        [ A("Take, record and present a full set of measurements for two people."),
+          A("Design a clean client measurement / record card you will use in your studio.") ])
+      ,
+      M("Pattern Drafting Basics",
+        "Turning measurements into paper patterns — the five basic blocks every tailor needs.",
+        [
+          L("Pattern Tools & the Five Blocks",
+            "Set up pattern paper, pencil, ruler and French curve, and understand the five basic blocks: front bodice, back bodice, front skirt, back skirt and sleeve.",
+            "Precision is everything — a small error on paper becomes a big error in fabric. Always check measurements as you draw.",
+            "Gather your drafting tools and practise smooth curves and true right angles on paper.")
+          ,
+          L("Drafting the Basic Skirt Block",
+            "Draft a personal straight skirt block from waist, hip and length measurements, placing darts correctly.",
+            "Mark the grainline and centre-front/centre-back lines clearly. Keep hip line level and darts pointing toward the fullest part of the hip.",
+            "Draft your own skirt block on pattern paper and label every line.")
+          ,
+          L("Drafting the Basic Bodice Block & Darts",
+            "Draft the front and back bodice block and calculate personal dart intake to shape the bust and waist.",
+            "Get the armhole curve smooth with the French curve. Too much dart intake pulls; too little leaves the bodice loose.",
+            "Draft your own bodice block with bust and waist darts placed correctly.")
+          ,
+          L("Drafting the Basic Sleeve & Armhole",
+            "Draft a basic sleeve to match the bodice armhole, understanding sleeve cap height and ease.",
+            "Measure the armhole of your bodice first — the sleeve cap must match it with a little ease for a smooth set-in sleeve.",
+            "Draft a sleeve block that matches your bodice armhole.")
+        ],
+        [ A("Draft a complete personal set of blocks: skirt, bodice and sleeve, all labelled."),
+          A("Add seam allowance and notches to one finished block ready for cutting.") ])
+      ,
+      M("Fabric & Cutting",
+        "Choosing the right fabric and cutting it accurately — where many beginners lose a garment.",
+        [
+          L("Fabric Types & Selection",
+            "Recognise common fabrics (cotton, ankara, linen, lace, chiffon, satin) and match fabric to garment and to skill level.",
+            "Know the right and wrong side. Slippery fabrics (chiffon, satin) are hard for beginners — start with stable cotton.",
+            "Build a small fabric swatch chart naming each fabric and a garment it suits.")
+          ,
+          L("Grainline, Fold & Layout",
+            "Fold fabric on grain, lay pattern pieces on the correct grainline, and pin or weight them ready to cut.",
+            "Off-grain cutting makes garments twist and hang badly. Line the grainline arrow parallel to the selvage every time.",
+            "Lay out a skirt pattern on scrap fabric on the correct grain and have it checked before cutting.")
+          ,
+          L("Cutting & Transferring Markings",
+            "Cut accurately with shears, add seam allowance, and transfer darts, notches and key points with chalk or tailor's tacks.",
+            "Cut with long, smooth strokes and keep the fabric flat on the table. Never lift the fabric to cut — it distorts the shape.",
+            "Cut a full skirt in calico/scrap fabric and transfer all markings.")
+        ],
+        [ A("Lay out, cut and mark a complete skirt in test fabric, checked on grain.") ])
+      ,
+      M("Construction I — The Skirt",
+        "Your first finished garment, from cut pieces to a hemmed, wearable skirt.",
+        [
+          L("Assembling the Skirt",
+            "Sew darts, join side seams, and press as you go to shape a straight or A-line skirt.",
+            "Sew darts from the wide end to the point and tie off — never backstitch a dart point, it puckers. Press darts toward the centre.",
+            "Assemble your cut skirt to the point of fitting.")
+          ,
+          L("Inserting a Zip",
+            "Insert a centred or invisible zip neatly and evenly.",
+            "Tack the zip in place first. Keep the seam line straight and the zip teeth hidden. Go slowly past the zip pull.",
+            "Insert a zip into your skirt.")
+          ,
+          L("Waistbands & Facings",
+            "Attach a waistband or facing and finish the waist edge cleanly.",
+            "Interface the waistband so it holds its shape. Check the waistband length against the waist before attaching.",
+            "Attach a finished waistband to your skirt.")
+          ,
+          L("Hemming",
+            "Measure, press and sew an even hem by machine and by blind hand-stitch.",
+            "Measure the hem from the floor for a level finish. Press the hem fold before stitching.",
+            "Finish the hem on your skirt and present the completed garment.")
+        ],
+        [ A("Complete one fully finished skirt: darts, seams, zip, waistband and hem."),
+          A("Write a short note on what you would do differently next time.") ])
+      ,
+      M("Construction II — Tops, Bodices & Sleeves",
+        "Moving up to shaped garments with necklines, collars and set-in sleeves.",
+        [
+          L("Constructing a Simple Bodice / Blouse",
+            "Join shoulder and side seams, shape with darts, and prepare the bodice for finishing.",
+            "Match notches and shoulder points before sewing. Stay-stitch the neckline before handling.",
+            "Assemble a bodice from your block up to the neckline stage.")
+          ,
+          L("Necklines & Facings",
+            "Finish round, V, boat and sweetheart necklines with facings that lie flat.",
+            "Clip and grade curved seam allowances so the neckline turns smoothly. Understitch the facing to keep it inside.",
+            "Finish one neckline with a facing that lies perfectly flat.")
+          ,
+          L("Collars",
+            "Attach a basic collar and a mandarin/stand collar.",
+            "Match centre-back and shoulder points. Trim and turn collar points cleanly for a crisp finish.",
+            "Attach one collar of your choice to a sample or garment.")
+          ,
+          L("Setting in Sleeves & Cuffs",
+            "Ease and set a sleeve into the armhole smoothly and finish with a hem or cuff.",
+            "Distribute the sleeve-cap ease evenly with no tucks or puckers. Sew from the sleeve side so ease sits smoothly.",
+            "Set a sleeve into a bodice armhole with a smooth cap.")
+        ],
+        [ A("Complete a lined or faced bodice top with a finished neckline and one set-in sleeve.") ])
+      ,
+      M("Construction III — Trousers & Dresses",
+        "Combining skills into full garments: trousers, pockets, and a complete dress.",
+        [
+          L("Drafting & Sewing Basic Trousers",
+            "Draft and assemble a simple pair of trousers with a waistband and hem.",
+            "Get the crotch curve right for comfort and fit. Mark front and back clearly — they are easily confused.",
+            "Assemble a basic pair of trousers to fitting stage.")
+          ,
+          L("Pockets",
+            "Sew a patch pocket and an in-seam side pocket.",
+            "Press the pocket shape before attaching. Reinforce pocket corners so they don't tear with use.",
+            "Add one patch pocket and one in-seam pocket to a sample or garment.")
+          ,
+          L("Bodice + Skirt = Dress; Linings",
+            "Join a bodice to a skirt at the waist and add a simple lining.",
+            "Match centre-front, side seams and waist notches before joining. Keep the waist seam level all the way round.",
+            "Combine your bodice and skirt blocks into a simple lined dress.")
+        ],
+        [ A("Complete one full garment: a simple dress or a pair of trousers, fully finished.") ])
+      ,
+      M("Fitting, Finishing & Alterations",
+        "The professional touches — proper pressing, fitting on the body, and altering garments to fit.",
+        [
+          L("Pressing & Professional Finishing",
+            "Use pressing, understitching and edge finishing to give a clean, shop-quality result.",
+            "A well-pressed garment always looks better made than a rushed one. Use a pressing cloth on delicate fabrics.",
+            "Press and finish one completed garment to presentation standard.")
+          ,
+          L("Fitting on the Body",
+            "Conduct a fitting and identify common issues: gaping, pulling, length and balance.",
+            "Fit with the garment the right way out on the person. Pin adjustments evenly on both sides.",
+            "Carry out a fitting on a client or classmate and note the adjustments needed.")
+          ,
+          L("Alterations & Repairs",
+            "Take in, let out, shorten and lengthen garments; replace a zip; mend a seam or hem.",
+            "Always check there is enough seam allowance before letting out. Match thread and stitch length to the original.",
+            "Alter an existing garment to fit a client and finish it neatly.")
+        ],
+        [ A("Alter a real garment to fit a client and present the before-and-after.") ])
+      ,
+      M("The Business of Tailoring",
+        "Turning skill into livelihood — pricing, clients, and building a studio of your own.",
+        [
+          L("Pricing & Costing Your Work",
+            "Cost fabric and materials, value your labour and time, and set fair, profitable prices.",
+            "Don't price only by fabric — your time and skill are the real value. Keep a simple record of costs per job.",
+            "Draft a starter price list for at least five common garments and services.")
+          ,
+          L("Client Care & Records",
+            "Manage measurements, agree timelines, take deposits, and keep every client's record.",
+            "Confirm the design, price and delivery date in writing before starting. Keep each client's measurement card safe.",
+            "Design a client intake and record system you will actually use.")
+          ,
+          L("Building Your Brand & Studio",
+            "Choose a name, present your work, use referrals and social media, and plan your own shop.",
+            "Consistency builds trust — deliver on time, every time. A happy client is your best advertisement.",
+            "Write a one-page plan for your own tailoring studio.")
+        ],
+        [ A("Present a simple price list and a client record card."),
+          A("Write a one-page vision for your tailoring business, with a scripture that anchors it.") ])
+    ]
+  };
+}
+
+/* ---------- Persistence ---------- */
+var saveTimer=null;
+function persist(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }catch(e){}
+}
+function save(){
+  if(saveTimer){ clearTimeout(saveTimer); }
+  saveTimer=setTimeout(function(){ persist(); toast(); }, 350);
+}
+function toast(){
+  var t=document.getElementById("savedToast");
+  t.classList.add("show");
+  setTimeout(function(){ t.classList.remove("show"); }, 1100);
+}
+function load(){
+  var raw=null;
+  try{ raw=localStorage.getItem(STORAGE_KEY); }catch(e){}
+  if(raw){
+    try{ DATA=JSON.parse(raw); }catch(e){ DATA=seedData(); }
+  } else {
+    DATA=seedData();
+  }
+  if(!DATA.meta) DATA.meta=seedData().meta;
+  if(!DATA.student) DATA.student={name:"",level:""};
+  if(!DATA.modules) DATA.modules=[];
+}
+
+/* ---------- Helpers ---------- */
+function esc(s){
+  s=(s==null)?"":String(s);
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function escLines(s){ return esc(s).replace(/\n/g,"<br/>"); }
+function findModule(id){
+  var i; for(i=0;i<DATA.modules.length;i++){ if(DATA.modules[i].id===id) return DATA.modules[i]; }
+  return null;
+}
+function initials(name){
+  name=(name||"").replace(/[^A-Za-z ]/g,"").trim();
+  if(!name) return "BA";
+  var parts=name.split(/\s+/);
+  if(parts.length===1) return parts[0].substring(0,2).toUpperCase();
+  return (parts[0].charAt(0)+parts[1].charAt(0)).toUpperCase();
+}
+
+/* ---------- Header sync ---------- */
+function syncHeader(){
+  var b=DATA.meta.business||"Your Tailoring Studio";
+  document.getElementById("hdrBusiness").textContent=b;
+  document.getElementById("hdrTag").textContent=DATA.meta.tag||"Curriculum Studio";
+  document.getElementById("crest").textContent=initials(b);
+}
+
+/* ---------- Setup tab ---------- */
+function bindSetup(){
+  var map=[
+    ["f-business","business"],["f-instructor","instructor"],["f-tag","tag"],
+    ["f-welcome","welcome"],["f-scripture","scripture"],["f-scriptureref","scriptureref"]
+  ];
+  var i;
+  for(i=0;i<map.length;i++){
+    (function(pair){
+      var el=document.getElementById(pair[0]);
+      el.value=DATA.meta[pair[1]]||"";
+      el.addEventListener("input",function(){
+        DATA.meta[pair[1]]=el.value;
+        if(pair[1]==="business"||pair[1]==="tag"){ syncHeader(); }
+        save();
+      });
+    })(map[i]);
+  }
+}
+
+/* ---------- Curriculum render ---------- */
+function renderModules(){
+  var wrap=document.getElementById("modules");
+  wrap.innerHTML="";
+  var mi;
+  for(mi=0; mi<DATA.modules.length; mi++){
+    (function(m,index){
+      var mod=document.createElement("div");
+      mod.className="module"+(m.collapsed?" collapsed":"");
+
+      /* head */
+      var head=document.createElement("div");
+      head.className="module-head";
+      head.innerHTML='<div class="num">'+(index+1)+'</div>'+
+        '<div class="mtitle">'+esc(m.title||"Untitled Module")+'</div>'+
+        '<div class="chev">&#9660;</div>';
+      head.addEventListener("click",function(){
+        m.collapsed=!m.collapsed;
+        mod.classList.toggle("collapsed");
+        save();
+      });
+      mod.appendChild(head);
+
+      /* body */
+      var body=document.createElement("div");
+      body.className="module-body";
+
+      /* module title + description */
+      var mt=document.createElement("label");
+      mt.className="fld";
+      mt.innerHTML='<span class="cap">Module Title</span>';
+      var mtInput=document.createElement("input");
+      mtInput.className="t"; mtInput.value=m.title||"";
+      mtInput.addEventListener("input",function(){
+        m.title=mtInput.value;
+        head.querySelector(".mtitle").textContent=mtInput.value||"Untitled Module";
+        save();
+      });
+      mt.appendChild(mtInput);
+      body.appendChild(mt);
+
+      var md=document.createElement("label");
+      md.className="fld";
+      md.innerHTML='<span class="cap">Module Overview</span>';
+      var mdInput=document.createElement("textarea");
+      mdInput.className="t"; mdInput.value=m.description||"";
+      mdInput.addEventListener("input",function(){ m.description=mdInput.value; save(); });
+      md.appendChild(mdInput);
+      body.appendChild(md);
+
+      /* lessons */
+      var lessonsWrap=document.createElement("div");
+      var li;
+      for(li=0; li<m.lessons.length; li++){
+        lessonsWrap.appendChild(buildLesson(m, m.lessons[li], li));
+      }
+      body.appendChild(lessonsWrap);
+
+      var addLessonBtn=document.createElement("button");
+      addLessonBtn.className="btn btn-verd btn-sm";
+      addLessonBtn.textContent="+ Add Lesson";
+      addLessonBtn.addEventListener("click",function(){
+        m.lessons.push({id:newId("l"),title:"New Lesson",objectives:"",notes:"",practice:""});
+        save(); renderModules(); reScroll(m.id);
+      });
+      body.appendChild(addLessonBtn);
+
+      /* assignments */
+      var aWrap=document.createElement("div");
+      aWrap.className="assign-wrap";
+      aWrap.innerHTML='<div class="assign-title">Assignments for this module</div>';
+      var ai;
+      for(ai=0; ai<m.assignments.length; ai++){
+        aWrap.appendChild(buildAssign(m, m.assignments[ai], ai));
+      }
+      var addAssignBtn=document.createElement("button");
+      addAssignBtn.className="btn btn-ghost btn-sm";
+      addAssignBtn.textContent="+ Add Assignment";
+      addAssignBtn.addEventListener("click",function(){
+        m.assignments.push({id:newId("a"),text:""});
+        save(); renderModules(); reScroll(m.id);
+      });
+      aWrap.appendChild(addAssignBtn);
+      body.appendChild(aWrap);
+
+      /* module controls */
+      var ctrl=document.createElement("div");
+      ctrl.className="rowbtns";
+      ctrl.style.marginTop="14px";
+      var delBtn=document.createElement("button");
+      delBtn.className="btn btn-danger btn-sm";
+      delBtn.textContent="Delete Module";
+      delBtn.addEventListener("click",function(){
+        if(confirm('Delete the whole module "'+(m.title||"Untitled")+'"? This cannot be undone.')){
+          var k; for(k=0;k<DATA.modules.length;k++){ if(DATA.modules[k].id===m.id){ DATA.modules.splice(k,1); break; } }
+          save(); renderModules(); renderModChecks();
+        }
+      });
+      ctrl.appendChild(delBtn);
+      body.appendChild(ctrl);
+
+      mod.appendChild(body);
+      mod.setAttribute("data-mid",m.id);
+      wrap.appendChild(mod);
+    })(DATA.modules[mi], mi);
+  }
+}
+
+function buildLesson(m, lesson, idx){
+  var box=document.createElement("div");
+  box.className="lesson";
+
+  var top=document.createElement("div");
+  top.className="lesson-top";
+  top.innerHTML='<span class="dot"></span>';
+  var tin=document.createElement("input");
+  tin.value=lesson.title||"";
+  tin.placeholder="Lesson title";
+  tin.addEventListener("input",function(){ lesson.title=tin.value; save(); });
+  top.appendChild(tin);
+  var del=document.createElement("button");
+  del.className="btn btn-danger btn-sm";
+  del.textContent="Remove";
+  del.addEventListener("click",function(){
+    if(confirm("Remove this lesson?")){
+      var k; for(k=0;k<m.lessons.length;k++){ if(m.lessons[k].id===lesson.id){ m.lessons.splice(k,1); break; } }
+      save(); renderModules(); reScroll(m.id);
+    }
+  });
+  top.appendChild(del);
+  box.appendChild(top);
+
+  box.appendChild(fieldRow("What they'll learn (the tutorial)","learn",lesson,"objectives"));
+  box.appendChild(fieldRow("What to look out for (watch-points & mistakes)","look",lesson,"notes"));
+  box.appendChild(fieldRow("Practice / follow-up","prac",lesson,"practice"));
+  return box;
+}
+
+function fieldRow(label, cls, obj, key){
+  var row=document.createElement("div");
+  row.className="field-row";
+  var lab=document.createElement("div");
+  lab.className="lab "+cls;
+  lab.textContent=label;
+  row.appendChild(lab);
+  var ta=document.createElement("textarea");
+  ta.className="t";
+  ta.value=obj[key]||"";
+  ta.addEventListener("input",function(){ obj[key]=ta.value; save(); });
+  row.appendChild(ta);
+  return row;
+}
+
+function buildAssign(m, a, idx){
+  var row=document.createElement("div");
+  row.className="assign";
+  row.innerHTML='<div class="idx">'+(idx+1)+'</div>';
+  var ta=document.createElement("textarea");
+  ta.className="t";
+  ta.value=a.text||"";
+  ta.placeholder="Describe the assignment...";
+  ta.addEventListener("input",function(){ a.text=ta.value; save(); });
+  row.appendChild(ta);
+  var del=document.createElement("button");
+  del.className="btn btn-danger btn-sm";
+  del.textContent="x";
+  del.title="Remove assignment";
+  del.addEventListener("click",function(){
+    var k; for(k=0;k<m.assignments.length;k++){ if(m.assignments[k].id===a.id){ m.assignments.splice(k,1); break; } }
+    save(); renderModules(); reScroll(m.id);
+  });
+  row.appendChild(del);
+  return row;
+}
+
+function reScroll(mid){
+  var el=document.querySelector('.module[data-mid="'+mid+'"]');
+  if(el){ el.scrollIntoView({behavior:"smooth",block:"nearest"}); }
+}
+
+/* ---------- Export tab ---------- */
+function bindExport(){
+  var s=document.getElementById("f-student");
+  var l=document.getElementById("f-level");
+  s.value=DATA.student.name||"";
+  l.value=DATA.student.level||"";
+  s.addEventListener("input",function(){ DATA.student.name=s.value; save(); });
+  l.addEventListener("input",function(){ DATA.student.level=l.value; save(); });
+}
+
+function renderModChecks(){
+  var wrap=document.getElementById("modchecks");
+  wrap.innerHTML="";
+  var i;
+  for(i=0;i<DATA.modules.length;i++){
+    (function(m,idx){
+      var row=document.createElement("label");
+      row.className="modchk";
+      var cb=document.createElement("input");
+      cb.type="checkbox";
+      cb.checked=(m.include!==false);
+      cb.addEventListener("change",function(){ m.include=cb.checked; save(); });
+      var t=document.createElement("span");
+      t.className="mc-t";
+      t.textContent=(idx+1)+". "+(m.title||"Untitled Module");
+      row.appendChild(cb); row.appendChild(t);
+      wrap.appendChild(row);
+    })(DATA.modules[i], i);
+  }
+}
+
+function buildPrintDoc(){
+  var meta=DATA.meta, stu=DATA.student;
+  var now=new Date();
+  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var dateStr=months[now.getMonth()]+" "+now.getDate()+", "+now.getFullYear();
+
+  var included=[];
+  var i; for(i=0;i<DATA.modules.length;i++){ if(DATA.modules[i].include!==false){ included.push(DATA.modules[i]); } }
+
+  var html="";
+  /* cover */
+  html+='<div class="doc-cover">';
+  html+='<div class="cbrand">'+esc(meta.business||"Your Tailoring Studio")+'</div>';
+  if(meta.tag){ html+='<div class="ctag">'+esc(meta.tag)+'</div>'; }
+  if(meta.scripture){
+    html+='<div class="cverse">&ldquo;'+esc(meta.scripture)+'&rdquo;';
+    if(meta.scriptureref){ html+='<span>&mdash; '+esc(meta.scriptureref)+'</span>'; }
+    html+='</div>';
+  }
+  html+='<div class="cprep">Curriculum &amp; Learning Plan prepared for</div>';
+  html+='<div class="cname">'+esc(stu.name||"________________________")+'</div>';
+  var meta2=[];
+  if(stu.level){ meta2.push(esc(stu.level)); }
+  if(meta.instructor){ meta2.push("Instructor: "+esc(meta.instructor)); }
+  meta2.push(dateStr);
+  html+='<div class="cmeta">'+meta2.join(" &nbsp;&middot;&nbsp; ")+'</div>';
+  html+='</div>';
+
+  /* welcome */
+  if(meta.welcome){
+    html+='<div style="margin:20px 0;padding:14px 16px;border-left:3px solid var(--verd2);background:#f7fbfa;border-radius:0 10px 10px 0;">';
+    html+='<div style="font-family:\'Saira Condensed\';font-weight:600;color:var(--verd);font-size:13px;letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;">A word before we begin</div>';
+    html+='<div style="font-size:14px;line-height:1.6;color:#3a444d;">'+escLines(meta.welcome)+'</div>';
+    html+='</div>';
+  }
+
+  /* toc */
+  if(included.length){
+    html+='<div class="doc-toc"><h3>Course Outline</h3><ol>';
+    for(i=0;i<included.length;i++){ html+='<li>'+esc(included[i].title||"Untitled Module")+'</li>'; }
+    html+='</ol></div>';
+  }
+
+  /* modules */
+  for(i=0;i<included.length;i++){
+    var m=included[i];
+    html+='<div class="doc-mod">';
+    html+='<div class="doc-mod-h"><div class="n">'+(i+1)+'</div><h3>'+esc(m.title||"Untitled Module")+'</h3></div>';
+    if(m.description){ html+='<p class="doc-mod-desc">'+escLines(m.description)+'</p>'; }
+    var j;
+    for(j=0;j<m.lessons.length;j++){
+      var ls=m.lessons[j];
+      html+='<div class="doc-lesson">';
+      html+='<h4>'+(i+1)+'.'+(j+1)+'&nbsp; '+esc(ls.title||"Lesson")+'</h4>';
+      if(ls.objectives){ html+='<div class="seg learn"><span class="k">Learn:</span> '+escLines(ls.objectives)+'</div>'; }
+      if(ls.notes){ html+='<div class="seg look"><span class="k">Look out for:</span> '+escLines(ls.notes)+'</div>'; }
+      if(ls.practice){ html+='<div class="seg prac"><span class="k">Practice:</span> '+escLines(ls.practice)+'</div>'; }
+      html+='</div>';
+    }
+    if(m.assignments && m.assignments.length){
+      var hasText=false, a;
+      for(a=0;a<m.assignments.length;a++){ if((m.assignments[a].text||"").trim()){ hasText=true; break; } }
+      if(hasText){
+        html+='<div class="doc-assign"><div class="ah">Assignments</div><ul>';
+        for(a=0;a<m.assignments.length;a++){
+          var tx=(m.assignments[a].text||"").trim();
+          if(tx){ html+='<li>'+escLines(tx)+'</li>'; }
+        }
+        html+='</ul></div>';
+      }
+    }
+    html+='</div>';
+  }
+
+  if(!included.length){
+    html+='<div style="text-align:center;color:#888;padding:30px;">No modules selected. Tick at least one module above to build the PDF.</div>';
+  }
+
+  /* footer */
+  html+='<div class="doc-foot"><div class="g">Glory to God alone</div><div class="a">A M H G</div></div>';
+
+  document.getElementById("printDoc").innerHTML=html;
+}
+
+/* ---------- Backup ---------- */
+function bindBackup(){
+  document.getElementById("btn-export-json").addEventListener("click",function(){
+    var blob=new Blob([JSON.stringify(DATA,null,2)],{type:"application/json"});
+    var url=URL.createObjectURL(blob);
+    var name=(DATA.meta.business||"tailoring-curriculum").replace(/[^A-Za-z0-9]+/g,"-").toLowerCase();
+    var a=document.createElement("a");
+    a.href=url; a.download=name+"-backup.json";
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 500);
+  });
+  document.getElementById("btn-import-json").addEventListener("click",function(){
+    document.getElementById("importfile").click();
+  });
+  document.getElementById("importfile").addEventListener("change",function(e){
+    var file=e.target.files[0];
+    if(!file) return;
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      try{
+        var obj=JSON.parse(ev.target.result);
+        if(obj && obj.modules){
+          DATA=obj;
+          if(!DATA.meta) DATA.meta=seedData().meta;
+          if(!DATA.student) DATA.student={name:"",level:""};
+          persist(); fullRender();
+          alert("Backup restored successfully.");
+        } else {
+          alert("That file does not look like a valid backup.");
+        }
+      }catch(err){ alert("Could not read that file."); }
+      e.target.value="";
+    };
+    reader.readAsText(file);
+  });
+  document.getElementById("btn-reset").addEventListener("click",function(){
+    if(confirm("Reset to the original built-in curriculum? Your current edits will be cleared. (Download a backup first if you want to keep them.)")){
+      DATA=seedData(); persist(); fullRender();
+    }
+  });
+}
+
+/* ---------- Tabs ---------- */
+function bindTabs(){
+  var btns=document.querySelectorAll("nav.tabs button");
+  var i;
+  for(i=0;i<btns.length;i++){
+    btns[i].addEventListener("click",function(){
+      var tab=this.getAttribute("data-tab");
+      var k;
+      for(k=0;k<btns.length;k++){ btns[k].classList.remove("active"); }
+      this.classList.add("active");
+      var panels=document.querySelectorAll(".panel");
+      for(k=0;k<panels.length;k++){ panels[k].classList.remove("active"); }
+      document.getElementById("panel-"+tab).classList.add("active");
+      if(tab==="export"){ renderModChecks(); buildPrintDoc(); }
+    });
+  }
+}
+
+/* ---------- Full render ---------- */
+function fullRender(){
+  syncHeader();
+  /* setup fields */
+  document.getElementById("f-business").value=DATA.meta.business||"";
+  document.getElementById("f-instructor").value=DATA.meta.instructor||"";
+  document.getElementById("f-tag").value=DATA.meta.tag||"";
+  document.getElementById("f-welcome").value=DATA.meta.welcome||"";
+  document.getElementById("f-scripture").value=DATA.meta.scripture||"";
+  document.getElementById("f-scriptureref").value=DATA.meta.scriptureref||"";
+  document.getElementById("f-student").value=DATA.student.name||"";
+  document.getElementById("f-level").value=DATA.student.level||"";
+  renderModules();
+  renderModChecks();
+}
+
+/* ---------- Init ---------- */
+function init(){
+  load();
+  bindTabs();
+  bindSetup();
+  bindExport();
+  bindBackup();
+  fullRender();
+
+  document.getElementById("btn-add-module").addEventListener("click",function(){
+    DATA.modules.push({id:newId("m"),title:"New Module",description:"",collapsed:false,include:true,
+      lessons:[{id:newId("l"),title:"New Lesson",objectives:"",notes:"",practice:""}],
+      assignments:[]});
+    save(); renderModules(); renderModChecks();
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+  document.getElementById("btn-collapse-all").addEventListener("click",function(){
+    var i; for(i=0;i<DATA.modules.length;i++){ DATA.modules[i].collapsed=true; }
+    save(); renderModules();
+  });
+  document.getElementById("btn-expand-all").addEventListener("click",function(){
+    var i; for(i=0;i<DATA.modules.length;i++){ DATA.modules[i].collapsed=false; }
+    save(); renderModules();
+  });
+  document.getElementById("btn-preview").addEventListener("click",buildPrintDoc);
+  document.getElementById("btn-print").addEventListener("click",function(){
+    buildPrintDoc();
+    setTimeout(function(){ window.print(); }, 120);
+  });
+}
+
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",init);
+}else{ init(); }
+</script>
+</body>
+</html>
