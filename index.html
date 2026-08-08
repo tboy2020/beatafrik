@@ -136,8 +136,9 @@
   }
   .lesson-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
   .lesson-top .dot{width:9px;height:9px;border-radius:50%;background:var(--verd2);flex:0 0 auto;}
-  .lesson-top input{flex:1;font-family:'Saira Condensed';font-weight:600;font-size:16px;color:var(--navy);border:none;border-bottom:1px dashed var(--line);border-radius:0;padding:4px 2px;background:transparent;}
+  .lesson-top input{flex:1;min-width:0;font-family:'Saira Condensed';font-weight:600;font-size:16px;color:var(--navy);border:none;border-bottom:1px dashed var(--line);border-radius:0;padding:4px 2px;background:transparent;}
   .lesson-top input:focus{outline:none;border-bottom-color:var(--verd2);}
+  .lesson-ctrl{justify-content:flex-end;margin-top:2px;}
   .field-row{margin-bottom:10px;}
   .field-row .lab{font-family:'Saira Condensed';font-weight:600;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
   .field-row .lab.learn{color:var(--verd);}
@@ -798,21 +799,25 @@ function buildLesson(m, lesson, idx){
   tin.placeholder="Lesson title";
   tin.addEventListener("input",function(){ lesson.title=tin.value; save(); });
   top.appendChild(tin);
+  box.appendChild(top);
+
+  box.appendChild(fieldRow("What they'll learn (the tutorial)","learn",lesson,"objectives"));
+  box.appendChild(fieldRow("What to look out for (watch-points & mistakes)","look",lesson,"notes"));
+  box.appendChild(fieldRow("Practice / follow-up","prac",lesson,"practice"));
+
+  var ctrl=document.createElement("div");
+  ctrl.className="rowbtns lesson-ctrl";
   var del=document.createElement("button");
   del.className="btn btn-danger btn-sm";
-  del.textContent="Remove";
+  del.textContent="Remove lesson";
   del.addEventListener("click",function(){
     if(confirm("Remove this lesson?")){
       var k; for(k=0;k<m.lessons.length;k++){ if(m.lessons[k].id===lesson.id){ m.lessons.splice(k,1); break; } }
       save(); renderModules(); reScroll(m.id);
     }
   });
-  top.appendChild(del);
-  box.appendChild(top);
-
-  box.appendChild(fieldRow("What they'll learn (the tutorial)","learn",lesson,"objectives"));
-  box.appendChild(fieldRow("What to look out for (watch-points & mistakes)","look",lesson,"notes"));
-  box.appendChild(fieldRow("Practice / follow-up","prac",lesson,"practice"));
+  ctrl.appendChild(del);
+  box.appendChild(ctrl);
   return box;
 }
 
