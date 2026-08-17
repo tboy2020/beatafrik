@@ -206,7 +206,7 @@
   .saved.show{opacity:1;transform:translateY(0);}
 
   .hb-h{color:var(--navy);font-size:19px;font-family:'Saira Condensed';font-weight:600;margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line);}
-  .hb-item{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+  .hb-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;}
   .hb-item .t{flex:1;min-width:0;}
 
   .doc-section{margin:24px 0;page-break-inside:avoid;}
@@ -1144,9 +1144,9 @@ function renderHbList(containerId, arr, ph){
     (function(idx){
       var row=document.createElement("div");
       row.className="hb-item";
-      var inp=document.createElement("input");
+      var inp=document.createElement("textarea");
       inp.className="t"; inp.value=arr[idx]||""; inp.placeholder=ph;
-      inp.addEventListener("input",function(){ arr[idx]=inp.value; save(); });
+      inp.addEventListener("input",function(){ arr[idx]=inp.value; autosize(inp); save(); });
       row.appendChild(inp);
       var del=document.createElement("button");
       del.className="btn btn-danger btn-sm"; del.textContent="x"; del.title="Remove";
@@ -1155,6 +1155,7 @@ function renderHbList(containerId, arr, ph){
       wrap.appendChild(row);
     })(i);
   }
+  autosizeIn(wrap);
 }
 function renderHbLists(){
   renderHbList("hb-bring-list", DATA.handbook.bring, "Item to bring");
