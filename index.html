@@ -205,15 +205,37 @@
   .saved{position:fixed;right:16px;bottom:16px;background:var(--verd);color:#fff;font-family:'Saira Condensed';font-weight:600;font-size:14px;padding:9px 15px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.2);opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none;z-index:50;}
   .saved.show{opacity:1;transform:translateY(0);}
 
+  .hb-h{color:var(--navy);font-size:19px;font-family:'Saira Condensed';font-weight:600;margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line);}
+  .hb-item{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+  .hb-item .t{flex:1;min-width:0;}
+
+  .doc-section{margin:24px 0;page-break-inside:avoid;}
+  .doc-section h3{color:var(--navy);font-size:20px;font-family:'Saira Condensed';font-weight:600;border-bottom:2px solid var(--gold);padding-bottom:6px;margin:0 0 12px;}
+  .doc-letter{font-size:14.5px;line-height:1.7;color:#2b3640;}
+  .doc-info{width:100%;border-collapse:collapse;}
+  .doc-info td{padding:9px 11px;border:1px solid var(--line);font-size:14px;vertical-align:top;}
+  .doc-info td.k{background:#faf6ea;font-family:'Saira Condensed';font-weight:600;color:var(--navy);width:38%;letter-spacing:.3px;}
+  .doc-ul{margin:0;padding-left:22px;}
+  .doc-ul li{font-size:14px;margin:5px 0;line-height:1.5;}
+  .doc-progress{width:100%;border-collapse:collapse;margin-top:4px;}
+  .doc-progress th{background:var(--navy);color:#fff;font-family:'Saira Condensed';font-weight:600;font-size:12px;letter-spacing:.4px;padding:8px 6px;text-align:left;}
+  .doc-progress td{border:1px solid var(--line);padding:11px 8px;font-size:13px;}
+  .doc-progress td.mod{font-weight:600;color:var(--navy);}
+  .doc-blessing{text-align:center;border:2px solid var(--gold);border-radius:14px;padding:18px 20px;background:linear-gradient(180deg,#fffdf6,#fff);}
+  .doc-blessing .bh{font-family:'Saira Condensed';font-weight:600;letter-spacing:1px;color:var(--gold);text-transform:uppercase;font-size:13px;margin-bottom:6px;}
+  .doc-blessing .bt{font-family:'Fraunces',Georgia,serif;font-style:italic;color:#3a444d;font-size:15px;line-height:1.6;}
+
   @media print{
-    header.app,nav.tabs,footer.app,.toolbar,#exportControls,.saved{display:none !important;}
+    header.app,nav.tabs,footer.app,.toolbar,#exportControls,#handbookControls,.saved{display:none !important;}
     body{background:#fff;}
     main{max-width:none;padding:0;}
     .panel{display:none !important;box-shadow:none;border:none;padding:0;}
-    #panel-export{display:block !important;}
-    #printDoc{margin:0;}
+    body.print-export #panel-export{display:block !important;}
+    body.print-handbook #panel-handbook{display:block !important;}
+    #printDoc,#handbookDoc{margin:0;}
     .doc-mod{page-break-inside:avoid;}
     .doc-cover{page-break-after:always;}
+    .doc-section{page-break-inside:avoid;}
   }
 </style>
 </head>
@@ -236,6 +258,7 @@
 <nav class="tabs">
   <button data-tab="setup" class="active">Setup</button>
   <button data-tab="curriculum">Curriculum</button>
+  <button data-tab="handbook">Handbook</button>
   <button data-tab="export">Student &amp; Export</button>
   <button data-tab="backup">Backup</button>
 </nav>
@@ -303,6 +326,53 @@
       </div>
     </div>
     <div id="printDoc"></div>
+  </section>
+
+  <!-- HANDBOOK -->
+  <section class="panel" id="panel-handbook">
+    <div id="handbookControls">
+      <h2>Student Handbook</h2>
+      <p class="sub">A complete welcome booklet to print and give each student. Fill in the sections below, then preview and save as PDF. The curriculum and a progress tracker are added automatically.</p>
+
+      <div class="grid2">
+        <label class="fld"><span class="cap">Student Name</span>
+          <input class="t" id="hb-student" placeholder="e.g. Blessing Okoro" /></label>
+        <label class="fld"><span class="cap">Level / Cohort (optional)</span>
+          <input class="t" id="hb-level" placeholder="e.g. Beginner Class &middot; 2026" /></label>
+      </div>
+
+      <label class="fld"><span class="cap">Welcome Letter</span>
+        <textarea class="t" id="hb-welcome" placeholder="A personal welcome from the instructor..."></textarea></label>
+
+      <h3 class="hb-h">Class Information</h3>
+      <div class="grid2">
+        <label class="fld"><span class="cap">Class Days &amp; Time</span><input class="t" id="hb-schedule" placeholder="e.g. Tue &amp; Thu, 10am&ndash;1pm" /></label>
+        <label class="fld"><span class="cap">Course Duration</span><input class="t" id="hb-duration" placeholder="e.g. 12 weeks" /></label>
+      </div>
+      <div class="grid2">
+        <label class="fld"><span class="cap">Location</span><input class="t" id="hb-location" placeholder="e.g. 12 Adeola Street, Lagos" /></label>
+        <label class="fld"><span class="cap">Fees / Investment</span><input class="t" id="hb-fees" placeholder="e.g. amount &amp; payment plan" /></label>
+      </div>
+      <label class="fld"><span class="cap">Contact (phone / email)</span><input class="t" id="hb-contact" placeholder="e.g. 080X XXX XXXX &middot; email@example.com" /></label>
+
+      <h3 class="hb-h">What to Bring</h3>
+      <div id="hb-bring-list"></div>
+      <button class="btn btn-verd btn-sm" id="hb-add-bring">+ Add Item</button>
+
+      <h3 class="hb-h">Studio Rules &amp; Expectations</h3>
+      <div id="hb-rules-list"></div>
+      <button class="btn btn-verd btn-sm" id="hb-add-rule">+ Add Rule</button>
+
+      <label class="fld" style="margin-top:18px;"><span class="cap">Closing Blessing</span>
+        <textarea class="t" id="hb-blessing" placeholder="A closing word of blessing..."></textarea></label>
+
+      <div class="toolbar" style="margin-top:6px;">
+        <button class="btn btn-gold" id="hb-preview">Refresh Preview</button>
+        <button class="btn btn-verd" id="hb-print">Save / Print Handbook</button>
+      </div>
+      <div class="hint"><b>To save as PDF:</b> tap <b>Save / Print Handbook</b>, then choose <b>&ldquo;Save as PDF&rdquo;</b> as the destination. On a phone, choose &ldquo;Save as PDF&rdquo; or &ldquo;Print to PDF&rdquo;.</div>
+    </div>
+    <div id="handbookDoc"></div>
   </section>
 
   <!-- BACKUP -->
@@ -588,7 +658,35 @@ function seedData(){
         ],
         [ A("Present a simple price list and a client record card."),
           A("Write a one-page vision for your tailoring business, with a scripture that anchors it.") ])
-    ]
+    ],
+    handbook:{
+      welcome:"Dear Student,\n\nWelcome to our tailoring family. I am so glad you have chosen to learn this beautiful craft. Over the coming weeks you will grow from your very first stitch to sewing complete garments with your own hands.\n\nCome to each class ready to learn, to practise, and to work with a diligent and cheerful heart. Skill is built one stitch at a time \u2014 be patient with yourself, ask questions freely, and trust the process.\n\nI look forward to walking this journey with you.\n\nWarmly,\nYour Instructor",
+      classInfo:{ schedule:"", duration:"", location:"", fees:"", contact:"" },
+      bring:[
+        "Tape measure",
+        "Fabric shears (for fabric only)",
+        "Small scissors or thread snips",
+        "A box of pins and a pin cushion",
+        "Assorted hand-sewing needles",
+        "Tailor's chalk or a marking pencil",
+        "A seam ripper",
+        "A measuring ruler and a French curve",
+        "Notebook and pen",
+        "Thread in assorted colours",
+        "Practice fabric / calico"
+      ],
+      rules:[
+        "Arrive on time and ready to learn.",
+        "Treat every classmate and the instructor with respect.",
+        "Handle the machines and tools with care, and report any fault at once.",
+        "Keep your workspace clean and tidy before you leave.",
+        "Complete and bring your assignments to each class.",
+        "Fabric shears are for fabric only \u2014 never for paper.",
+        "Ask questions freely; no question is a foolish one.",
+        "Above all, work heartily as unto the Lord (Colossians 3:23)."
+      ],
+      blessing:"May the Lord bless the work of your hands and establish all that you set out to do. As you learn this craft, may it become a source of provision, creativity and blessing to you and to many. Amen."
+    }
   };
 }
 
@@ -617,6 +715,10 @@ function load(){
   if(!DATA.meta) DATA.meta=seedData().meta;
   if(!DATA.student) DATA.student={name:"",level:""};
   if(!DATA.modules) DATA.modules=[];
+  if(!DATA.handbook) DATA.handbook=seedData().handbook;
+  if(!DATA.handbook.classInfo){ DATA.handbook.classInfo={schedule:"",duration:"",location:"",fees:"",contact:""}; }
+  if(!DATA.handbook.bring){ DATA.handbook.bring=[]; }
+  if(!DATA.handbook.rules){ DATA.handbook.rules=[]; }
 }
 
 /* ---------- Helpers ---------- */
@@ -894,6 +996,215 @@ function renderModChecks(){
   }
 }
 
+function cleanList(arr){
+  var out=[], i;
+  if(!arr) return out;
+  for(i=0;i<arr.length;i++){ if((arr[i]||"").trim()){ out.push(arr[i]); } }
+  return out;
+}
+
+function curriculumModulesHTML(list){
+  var html="", i, j, a;
+  for(i=0;i<list.length;i++){
+    var m=list[i];
+    html+='<div class="doc-mod">';
+    html+='<div class="doc-mod-h"><div class="n">'+(i+1)+'</div><h3>'+esc(m.title||"Untitled Module")+'</h3></div>';
+    if(m.description){ html+='<p class="doc-mod-desc">'+escLines(m.description)+'</p>'; }
+    for(j=0;j<m.lessons.length;j++){
+      var ls=m.lessons[j];
+      html+='<div class="doc-lesson">';
+      html+='<h4>'+(i+1)+'.'+(j+1)+'&nbsp; '+esc(ls.title||"Lesson")+'</h4>';
+      if(ls.objectives){ html+='<div class="seg learn"><span class="k">Learn:</span> '+escLines(ls.objectives)+'</div>'; }
+      if(ls.notes){ html+='<div class="seg look"><span class="k">Look out for:</span> '+escLines(ls.notes)+'</div>'; }
+      if(ls.practice){ html+='<div class="seg prac"><span class="k">Practice:</span> '+escLines(ls.practice)+'</div>'; }
+      html+='</div>';
+    }
+    if(m.assignments && m.assignments.length){
+      var hasText=false;
+      for(a=0;a<m.assignments.length;a++){ if((m.assignments[a].text||"").trim()){ hasText=true; break; } }
+      if(hasText){
+        html+='<div class="doc-assign"><div class="ah">Assignments</div><ul>';
+        for(a=0;a<m.assignments.length;a++){
+          var tx=(m.assignments[a].text||"").trim();
+          if(tx){ html+='<li>'+escLines(tx)+'</li>'; }
+        }
+        html+='</ul></div>';
+      }
+    }
+    html+='</div>';
+  }
+  return html;
+}
+
+function dateNow(){
+  var now=new Date();
+  var months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  return months[now.getMonth()]+" "+now.getDate()+", "+now.getFullYear();
+}
+
+function printWith(cls){
+  document.body.classList.add(cls);
+  setTimeout(function(){ window.print(); }, 120);
+}
+
+/* ---------- Handbook document ---------- */
+function buildHandbookDoc(){
+  var meta=DATA.meta, hb=DATA.handbook, stu=DATA.student;
+  var html="";
+
+  /* cover */
+  html+='<div class="doc-cover">';
+  html+='<div style="font-family:\'Saira Condensed\';font-weight:600;letter-spacing:2px;color:#1f7a6f;font-size:13px;text-transform:uppercase;margin-bottom:6px;">Student Handbook</div>';
+  html+='<div class="cbrand">'+esc(meta.business||"Beatafrik")+'</div>';
+  if(meta.tag){ html+='<div class="ctag">'+esc(meta.tag)+'</div>'; }
+  if(meta.scripture){
+    html+='<div class="cverse">&ldquo;'+esc(meta.scripture)+'&rdquo;';
+    if(meta.scriptureref){ html+='<span>&mdash; '+esc(meta.scriptureref)+'</span>'; }
+    html+='</div>';
+  }
+  html+='<div class="cprep">Prepared for</div>';
+  html+='<div class="cname">'+esc(stu.name||"________________________")+'</div>';
+  var meta2=[];
+  if(stu.level){ meta2.push(esc(stu.level)); }
+  if(meta.instructor){ meta2.push("Instructor: "+esc(meta.instructor)); }
+  meta2.push(dateNow());
+  html+='<div class="cmeta">'+meta2.join(" &nbsp;&middot;&nbsp; ")+'</div>';
+  html+='</div>';
+
+  /* welcome letter */
+  if((hb.welcome||"").trim()){
+    html+='<div class="doc-section"><h3>Welcome</h3><div class="doc-letter">'+escLines(hb.welcome)+'</div></div>';
+  }
+
+  /* class information */
+  var ci=hb.classInfo||{};
+  var rows=[];
+  if(ci.schedule){ rows.push(["Class Days & Time",ci.schedule]); }
+  if(ci.duration){ rows.push(["Course Duration",ci.duration]); }
+  if(ci.location){ rows.push(["Location",ci.location]); }
+  if(ci.fees){ rows.push(["Fees / Investment",ci.fees]); }
+  if(ci.contact){ rows.push(["Contact",ci.contact]); }
+  if(meta.instructor){ rows.push(["Instructor",meta.instructor]); }
+  if(rows.length){
+    html+='<div class="doc-section"><h3>Class Information</h3><table class="doc-info">';
+    var r; for(r=0;r<rows.length;r++){ html+='<tr><td class="k">'+esc(rows[r][0])+'</td><td>'+escLines(rows[r][1])+'</td></tr>'; }
+    html+='</table></div>';
+  }
+
+  /* what to bring */
+  var bring=cleanList(hb.bring);
+  if(bring.length){
+    html+='<div class="doc-section"><h3>What to Bring</h3><ul class="doc-ul">';
+    var b; for(b=0;b<bring.length;b++){ html+='<li>'+escLines(bring[b])+'</li>'; }
+    html+='</ul></div>';
+  }
+
+  /* rules */
+  var rules=cleanList(hb.rules);
+  if(rules.length){
+    html+='<div class="doc-section"><h3>Studio Rules &amp; Expectations</h3><ol class="doc-ul">';
+    var ru; for(ru=0;ru<rules.length;ru++){ html+='<li>'+escLines(rules[ru])+'</li>'; }
+    html+='</ol></div>';
+  }
+
+  /* curriculum */
+  if(DATA.modules.length){
+    html+='<div class="doc-section"><h3>Course Curriculum</h3>';
+    html+=curriculumModulesHTML(DATA.modules);
+    html+='</div>';
+  }
+
+  /* progress tracker */
+  if(DATA.modules.length){
+    html+='<div class="doc-section"><h3>My Progress</h3>';
+    html+='<table class="doc-progress"><tr><th>Module</th><th>Date started</th><th>Date completed</th><th>Instructor</th></tr>';
+    var mi2; for(mi2=0;mi2<DATA.modules.length;mi2++){
+      html+='<tr><td class="mod">'+(mi2+1)+'. '+esc(DATA.modules[mi2].title||"Module")+'</td><td></td><td></td><td></td></tr>';
+    }
+    html+='</table></div>';
+  }
+
+  /* blessing */
+  if((hb.blessing||"").trim()){
+    html+='<div class="doc-section"><div class="doc-blessing"><div class="bh">A Blessing</div><div class="bt">'+escLines(hb.blessing)+'</div></div></div>';
+  }
+
+  html+='<div class="doc-foot"><div class="g">Glory to God alone</div><div class="a">A M H G</div></div>';
+
+  document.getElementById("handbookDoc").innerHTML=html;
+}
+
+/* ---------- Handbook editor ---------- */
+function renderHbList(containerId, arr, ph){
+  var wrap=document.getElementById(containerId);
+  if(!wrap) return;
+  wrap.innerHTML="";
+  var i;
+  for(i=0;i<arr.length;i++){
+    (function(idx){
+      var row=document.createElement("div");
+      row.className="hb-item";
+      var inp=document.createElement("input");
+      inp.className="t"; inp.value=arr[idx]||""; inp.placeholder=ph;
+      inp.addEventListener("input",function(){ arr[idx]=inp.value; save(); });
+      row.appendChild(inp);
+      var del=document.createElement("button");
+      del.className="btn btn-danger btn-sm"; del.textContent="x"; del.title="Remove";
+      del.addEventListener("click",function(){ arr.splice(idx,1); save(); renderHbList(containerId,arr,ph); });
+      row.appendChild(del);
+      wrap.appendChild(row);
+    })(i);
+  }
+}
+function renderHbLists(){
+  renderHbList("hb-bring-list", DATA.handbook.bring, "Item to bring");
+  renderHbList("hb-rules-list", DATA.handbook.rules, "Rule or expectation");
+}
+function syncHandbookInputs(){
+  document.getElementById("hb-student").value=DATA.student.name||"";
+  document.getElementById("hb-level").value=DATA.student.level||"";
+  document.getElementById("hb-welcome").value=DATA.handbook.welcome||"";
+  document.getElementById("hb-blessing").value=DATA.handbook.blessing||"";
+  var ci=DATA.handbook.classInfo||{};
+  document.getElementById("hb-schedule").value=ci.schedule||"";
+  document.getElementById("hb-duration").value=ci.duration||"";
+  document.getElementById("hb-location").value=ci.location||"";
+  document.getElementById("hb-fees").value=ci.fees||"";
+  document.getElementById("hb-contact").value=ci.contact||"";
+}
+function bindHbInfo(id,key){
+  var el=document.getElementById(id);
+  el.addEventListener("input",function(){ DATA.handbook.classInfo[key]=el.value; save(); });
+}
+function bindHandbook(){
+  var s=document.getElementById("hb-student");
+  var l=document.getElementById("hb-level");
+  s.addEventListener("input",function(){ DATA.student.name=s.value; save(); });
+  l.addEventListener("input",function(){ DATA.student.level=l.value; save(); });
+
+  var w=document.getElementById("hb-welcome");
+  w.addEventListener("input",function(){ DATA.handbook.welcome=w.value; autosize(w); save(); });
+  var bl=document.getElementById("hb-blessing");
+  bl.addEventListener("input",function(){ DATA.handbook.blessing=bl.value; autosize(bl); save(); });
+
+  bindHbInfo("hb-schedule","schedule");
+  bindHbInfo("hb-duration","duration");
+  bindHbInfo("hb-location","location");
+  bindHbInfo("hb-fees","fees");
+  bindHbInfo("hb-contact","contact");
+
+  document.getElementById("hb-add-bring").addEventListener("click",function(){
+    DATA.handbook.bring.push(""); save(); renderHbList("hb-bring-list",DATA.handbook.bring,"Item to bring");
+  });
+  document.getElementById("hb-add-rule").addEventListener("click",function(){
+    DATA.handbook.rules.push(""); save(); renderHbList("hb-rules-list",DATA.handbook.rules,"Rule or expectation");
+  });
+  document.getElementById("hb-preview").addEventListener("click",buildHandbookDoc);
+  document.getElementById("hb-print").addEventListener("click",function(){
+    buildHandbookDoc(); printWith("print-handbook");
+  });
+}
+
 function buildPrintDoc(){
   var meta=DATA.meta, stu=DATA.student;
   var now=new Date();
@@ -938,35 +1249,7 @@ function buildPrintDoc(){
   }
 
   /* modules */
-  for(i=0;i<included.length;i++){
-    var m=included[i];
-    html+='<div class="doc-mod">';
-    html+='<div class="doc-mod-h"><div class="n">'+(i+1)+'</div><h3>'+esc(m.title||"Untitled Module")+'</h3></div>';
-    if(m.description){ html+='<p class="doc-mod-desc">'+escLines(m.description)+'</p>'; }
-    var j;
-    for(j=0;j<m.lessons.length;j++){
-      var ls=m.lessons[j];
-      html+='<div class="doc-lesson">';
-      html+='<h4>'+(i+1)+'.'+(j+1)+'&nbsp; '+esc(ls.title||"Lesson")+'</h4>';
-      if(ls.objectives){ html+='<div class="seg learn"><span class="k">Learn:</span> '+escLines(ls.objectives)+'</div>'; }
-      if(ls.notes){ html+='<div class="seg look"><span class="k">Look out for:</span> '+escLines(ls.notes)+'</div>'; }
-      if(ls.practice){ html+='<div class="seg prac"><span class="k">Practice:</span> '+escLines(ls.practice)+'</div>'; }
-      html+='</div>';
-    }
-    if(m.assignments && m.assignments.length){
-      var hasText=false, a;
-      for(a=0;a<m.assignments.length;a++){ if((m.assignments[a].text||"").trim()){ hasText=true; break; } }
-      if(hasText){
-        html+='<div class="doc-assign"><div class="ah">Assignments</div><ul>';
-        for(a=0;a<m.assignments.length;a++){
-          var tx=(m.assignments[a].text||"").trim();
-          if(tx){ html+='<li>'+escLines(tx)+'</li>'; }
-        }
-        html+='</ul></div>';
-      }
-    }
-    html+='</div>';
-  }
+  html+=curriculumModulesHTML(included);
 
   if(!included.length){
     html+='<div style="text-align:center;color:#888;padding:30px;">No modules selected. Tick at least one module above to build the PDF.</div>';
@@ -1004,6 +1287,10 @@ function bindBackup(){
           DATA=obj;
           if(!DATA.meta) DATA.meta=seedData().meta;
           if(!DATA.student) DATA.student={name:"",level:""};
+          if(!DATA.handbook) DATA.handbook=seedData().handbook;
+          if(!DATA.handbook.classInfo){ DATA.handbook.classInfo={schedule:"",duration:"",location:"",fees:"",contact:""}; }
+          if(!DATA.handbook.bring){ DATA.handbook.bring=[]; }
+          if(!DATA.handbook.rules){ DATA.handbook.rules=[]; }
           persist(); fullRender();
           alert("Backup restored successfully.");
         } else {
@@ -1035,7 +1322,14 @@ function bindTabs(){
       for(k=0;k<panels.length;k++){ panels[k].classList.remove("active"); }
       var shownPanel=document.getElementById("panel-"+tab);
       shownPanel.classList.add("active");
-      if(tab==="export"){ renderModChecks(); buildPrintDoc(); }
+      if(tab==="export"){
+        document.getElementById("f-student").value=DATA.student.name||"";
+        document.getElementById("f-level").value=DATA.student.level||"";
+        renderModChecks(); buildPrintDoc();
+      }
+      if(tab==="handbook"){
+        syncHandbookInputs(); renderHbLists(); buildHandbookDoc();
+      }
       autosizeIn(shownPanel);
     });
   }
@@ -1055,6 +1349,8 @@ function fullRender(){
   document.getElementById("f-level").value=DATA.student.level||"";
   renderModules();
   renderModChecks();
+  syncHandbookInputs();
+  renderHbLists();
   autosize(document.getElementById("f-welcome"));
 }
 
@@ -1064,8 +1360,14 @@ function init(){
   bindTabs();
   bindSetup();
   bindExport();
+  bindHandbook();
   bindBackup();
   fullRender();
+
+  window.addEventListener("afterprint",function(){
+    document.body.classList.remove("print-export");
+    document.body.classList.remove("print-handbook");
+  });
 
   window.addEventListener("resize",function(){
     var p=document.querySelector(".panel.active");
@@ -1090,7 +1392,7 @@ function init(){
   document.getElementById("btn-preview").addEventListener("click",buildPrintDoc);
   document.getElementById("btn-print").addEventListener("click",function(){
     buildPrintDoc();
-    setTimeout(function(){ window.print(); }, 120);
+    printWith("print-export");
   });
 }
 
